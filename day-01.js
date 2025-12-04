@@ -1,4 +1,4 @@
-// Advent of Code 2024 day 1
+// Advent of Code 2025 day 1
 
 const input = `
 R20
