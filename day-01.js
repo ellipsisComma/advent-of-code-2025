@@ -4569,7 +4569,7 @@ for (const turn of instructions) {
 	if (position === 0) zeroCount++;
 }
 
-console.log(`The position was zero ${zeroCount} times.`);
+console.log(`The position was zero ${zeroCount} times.`); // Answer: 1135
 
 // reset position and count
 
@@ -4596,7 +4596,7 @@ for (const turn of instructions) {
 	position = newPosition;
 }
 
-console.log(`The position was OR crossed zero ${zeroCount} times.`);
+console.log(`The position was OR crossed zero ${zeroCount} times.`); // Answer: 6558
 
 // NOTE: the conditions could definitely be simplified and I think at least one condition
 // examining remainders is unnecessary, but it seems to work

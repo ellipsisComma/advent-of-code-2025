@@ -180,7 +180,7 @@ for (let y = 0; y < max_y; y++) {
 	}
 }
 
-console.log(`The number of accessible rolls is ${total}.`);
+console.log(`The number of accessible rolls is ${total}.`); // Answer: 1424
 
 total = 0;
 
@@ -222,4 +222,4 @@ while (true) {
 	if (cleared_spaces.length === 0) break;
 }
 
-console.log(`The number of recursively accessible rolls is ${total}.`);
+console.log(`The number of recursively accessible rolls is ${total}.`); // Answer: 8727

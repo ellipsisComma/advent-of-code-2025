@@ -226,7 +226,7 @@ for (const row of rows) {
 	total += max;
 }
 
-console.log(`The maximum possible joltage with 2 batteries per row is ${total}.`);
+console.log(`The maximum possible joltage with 2 batteries per row is ${total}.`); // Answer: 17427
 
 // reset total
 total = 0;
@@ -266,4 +266,4 @@ for (const row of rows) {
 	total += max;
 }
 
-console.log(`The maximum possible joltage with 12 batteries per row is ${total}.`);
+console.log(`The maximum possible joltage with 12 batteries per row is ${total}.`); // Answer: 173161749617495

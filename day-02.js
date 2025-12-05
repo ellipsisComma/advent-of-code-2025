@@ -37,7 +37,7 @@ for (const range of ranges) {
 	}
 }
 
-console.log(`The sum of the invalid ids is ${total}.`);
+console.log(`The sum of the invalid ids is ${total}.`); // Answer: 12586854255
 
 // reset total to 0
 
@@ -72,4 +72,4 @@ for (const range of ranges) {
 	}
 }
 
-console.log(`The sum of the invalid ids is ${total}.`);
+console.log(`The sum of the invalid ids is ${total}.`); // Answer: 17298174201
