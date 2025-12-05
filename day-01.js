@@ -4593,7 +4593,6 @@ for (const turn of instructions) {
 	// +1 if turning right/positive and the remainder takes a non-0 position across 0
 	if (turn > 0 && newPosition !== 0 && newPosition < position) zeroCount++;
 
-	console.log(`position ${position}, newPosition ${newPosition}`);
 	position = newPosition;
 }
 
