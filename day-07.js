@@ -197,4 +197,4 @@ for (let y = 1; y < manifold.length; y++) {
 // sum all beam counts across all paths at the end of the manifold
 total = paths.reduce((acc, a) => acc + a, 0);
 
-console.log(`The number of paths is ${}.`) // Answer: 53916299384254
+console.log(`The number of paths is ${total}.`) // Answer: 53916299384254
