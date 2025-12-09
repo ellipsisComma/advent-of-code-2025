@@ -524,29 +524,6 @@ for (let t1 = 0; t1 < tiles.length - 1; t1++) {
 
 console.log(`The biggest area is ${biggestArea}.`); // Answer: 4715966250
 
-/*
-	IMPORTANT: before starting part 2 I checked using the following code
-	to find out whether there are any direct tight fits between red tiles.
-
-	This is NOT PERFECT, but suggests there may not be tight fits
-	in the data above.
-
-		let totalWithin1 = 0;
-		for (let t1 = 0; t1 < tiles.length - 1; t1++) {
-			for (let t2 = t1 + 1; t2 < tiles.length; t2++) {
-				if (
-					Math.abs(tiles[t2][0] - tiles[t1][0]) === 1
-					&&
-					Math.abs(tiles[t2][1] - tiles[t1][1]) === 0
-				) totalWithin1++;
-			}
-		}
-		console.log(totalWithin1);
-
-	REDO THIS but check, for each pair, whether its line is partly
-	or totally adjacent to another pair's line.
-*/
-
 let adjacentTiles = 0;
 for (let t1 = 0; t1 < tiles.length - 1; t1++) {
 	for (let t2 = t1 + 1; t2 < tiles.length; t2++) {
@@ -579,24 +556,18 @@ for (let l1 = 0; l1 < tiles.length - 1; l1++) {
 			// otherwise they're not adjacent
 			Math.abs(tiles[l1][adjacentAxis] - tiles[l2][adjacentAxis]) === 1
 			&&
-			// check conditions where the lines have NO adjacent overlap
-
-			// lines have no adjacent overlap if:
-			// 1. line 1 occurs completely before line 2
-			// 2. line 2 occurs completely before line 1
+			// line 1 is NOT fully before line 2
 			!(
-				// 
-				(
-					tiles[l1][lineAxis] < Math.min(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
-					&&
-					tiles[(l1 + 1) % tiles.length][lineAxis] < Math.min(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
-				)
-				||
-				(
-					tiles[l1][lineAxis] > Math.max(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
-					&&
-					tiles[(l1 + 1) % tiles.length][lineAxis] > Math.max(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
-				)
+				tiles[l1][lineAxis] < Math.min(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
+				&&
+				tiles[l1 + 1][lineAxis] < Math.min(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
+			)
+			&&
+			// line 1 is NOT fully after line 2
+			!(
+				tiles[l1][lineAxis] > Math.max(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
+				&&
+				tiles[l1 + 1][lineAxis] > Math.max(tiles[l2][lineAxis], tiles[(l2 + 1) % tiles.length][lineAxis])
 			)
 		) adjacentLines += 2;
 	}
@@ -612,18 +583,61 @@ biggestArea = 0;
 // build a big array of all pairs and their areas
 for (let t1 = 0; t1 < tiles.length - 1; t1++) {
 	for (let t2 = t1 + 1; t2 < tiles.length; t2++) {
-		// HERE: conditional that runs against all other pairs to check for overlaps
-		// and `continue` to the next loop iteration without checking the area
-		// if any line partly or totally crosses the rectangle
+		// for each line-start, check whether the line fully crosses into
+		// or through the rectangle 
+		let valid = true;
 
-		// this way, we only compare areas of rectangles that only include
-		// “inside” tiles (red and green tiles), since the red-tile outline
-		// has an “inside” on one side and an “outside” on the other
+		const rectMinX = Math.min(tiles[t1][0], tiles[t2][0]);
+		const rectMaxX = Math.max(tiles[t1][0], tiles[t2][0]);
+		const rectMinY = Math.min(tiles[t1][1], tiles[t2][1]);
+		const rectMaxY = Math.max(tiles[t1][1], tiles[t2][1]);
 
-		const area = (1 + Math.abs(tiles[t2][0] - tiles[t1][0]))
-			* (1 + Math.abs(tiles[t2][1] - tiles[t1][1]));
-		biggestArea = Math.max(biggestArea, area);
+		for (let l = 0; l < tiles.length; l++) {
+			const lineHorizontal = tiles[l][0] !== tiles[(l + 1) % tiles.length][0];
+
+			const lineMinX = Math.min(tiles[l][0], tiles[(l + 1) % tiles.length][0]);
+			const lineMaxX = Math.max(tiles[l][0], tiles[(l + 1) % tiles.length][0]);
+			const lineMinY = Math.min(tiles[l][1], tiles[(l + 1) % tiles.length][1]);
+			const lineMaxY = Math.max(tiles[l][1], tiles[(l + 1) % tiles.length][1]);
+
+			if (
+				// if the line is horizontal
+				// and within the rectangle on the y axis
+				// and NOT both without 
+				(
+					lineHorizontal
+					&&
+					// Y-coord of line is within rectangle
+					(rectMinY < lineMinY && lineMinY < rectMaxY)
+					&&
+					// X-coords of line are not both before or after
+					!(lineMaxX <= rectMinX || rectMaxX <= lineMinX)
+				)
+				||
+				(
+					!lineHorizontal
+					&&
+					// X-coord of line is within rectangle
+					(rectMinX < lineMinX && lineMinX < rectMaxX)
+					&&
+					// Y-coords of line are not both before or after
+					!(lineMaxY <= rectMinY || rectMaxY <= lineMinY)
+				)
+			) {
+				// rectangle is invalid; break out of the line-checker loop
+				valid = false;
+				break;
+			}
+		}
+
+		// if rectangle is valid (no overlapping lines)
+		// check it against the biggest recorded area
+		if (valid) {
+			const area = (1 + Math.abs(tiles[t2][0] - tiles[t1][0]))
+				* (1 + Math.abs(tiles[t2][1] - tiles[t1][1]));
+			biggestArea = Math.max(biggestArea, area);
+		}
 	}
 }
 
-console.log(`The biggest area with only red and green tiles is ${biggestArea}.`); // Answer: 
+console.log(`The biggest area with only red and green tiles is ${biggestArea}.`); // Answer: 1530527040
